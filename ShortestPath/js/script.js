@@ -239,7 +239,15 @@ var getStyes = function () {
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#242f3e"
+        "color": "#f5f5f5"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },
@@ -247,7 +255,7 @@ var getStyes = function () {
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#746855"
+        "color": "#4a4a4a"
       }
     ]
   },
@@ -255,16 +263,33 @@ var getStyes = function () {
     "elementType": "labels.text.stroke",
     "stylers": [
       {
-        "color": "#242f3e"
+        "color": "#f5f5f5"
       }
     ]
   },
   {
-    "featureType": "administrative.locality",
+    "featureType": "administrative.land_parcel",
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#eac991"
+        "color": "#bdbdbd"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "stylers": [
+      {
+        "visibility": "on"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#eeeeee"
       }
     ]
   },
@@ -273,7 +298,7 @@ var getStyes = function () {
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#d59563"
+        "color": "#5f5f5f"
       }
     ]
   },
@@ -282,7 +307,7 @@ var getStyes = function () {
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#1e5e36"
+        "color": "#94baa3"
       }
     ]
   },
@@ -291,7 +316,7 @@ var getStyes = function () {
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#6aa767"
+        "color": "#9e9e9e"
       }
     ]
   },
@@ -300,25 +325,16 @@ var getStyes = function () {
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#434e5f"
+        "color": "#ffffff"
       }
     ]
   },
   {
-    "featureType": "road",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#212a37"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
+    "featureType": "road.arterial",
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#9ca5b3"
+        "color": "#757575"
       }
     ]
   },
@@ -327,16 +343,7 @@ var getStyes = function () {
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#ada38f"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#1f2835"
+        "color": "#9a9a9a"
       }
     ]
   },
@@ -345,25 +352,34 @@ var getStyes = function () {
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#f3d19c"
+        "color": "#616161"
       }
     ]
   },
   {
-    "featureType": "transit",
+    "featureType": "road.local",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#858585"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.line",
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#2f3948"
+        "color": "#e5e5e5"
       }
     ]
   },
   {
     "featureType": "transit.station",
-    "elementType": "labels.text.fill",
+    "elementType": "geometry",
     "stylers": [
       {
-        "color": "#e7614e"
+        "color": "#eeeeee"
       }
     ]
   },
@@ -372,7 +388,7 @@ var getStyes = function () {
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#2c6272"
+        "color": "#459dd8"
       }
     ]
   },
@@ -381,16 +397,7 @@ var getStyes = function () {
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#515c6d"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#17263c"
+        "color": "#9e9e9e"
       }
     ]
   }
@@ -401,10 +408,10 @@ var getStyes = function () {
 var initMap = function (response) {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
-            lat: 15.488340,
-            lng: 73.829052
+            lat: 18.569212,
+            lng: 73.773665
         },
-        zoom: 10,
+        zoom: 15,
         mapTypeControl: false,
         styles: getStyes()
     });
@@ -447,11 +454,12 @@ function mapViewModel() {
         $("#wrapper").toggleClass("toggled");
     };
 
-    self.projectTitle = ko.observable('Explore Goa');
+    /*Banner title*/
+    self.projectTitle = ko.observable('Car Pool');
     self.listOfPlaces = ko.observableArray([]);
 
     /*function shows all the default listings*/
-    self.showNeighbourhoodMap = function () {
+    self.showAllLocations = function () {
         self.hideListings();
         viewModel.listOfPlaces([]);
         generateList();
