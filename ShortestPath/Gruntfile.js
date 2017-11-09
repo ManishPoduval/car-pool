@@ -18,7 +18,6 @@ module.exports = function(grunt) {
     var gruntConfig = {
         app: 'src',
         dist: 'dist',
-        // ensure the name and version properties in bower.json are correct, as they control much of the build
         name: yarn.name,
         version: yarn.version,
         description: '',
@@ -29,13 +28,10 @@ module.exports = function(grunt) {
         pkg: yarn,
         concat: {
             options: {
-                // define a string to put between each file in the concatenated output
                 separator: ';'
             },
             dist: {
-                // the files to concatenate
                 src: ['src/**/*.js'],
-                // the location of the resulting JS file
                 dest: 'dist/<%= pkg.name %>.js'
             }
         },
