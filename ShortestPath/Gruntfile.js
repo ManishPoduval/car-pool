@@ -19,8 +19,7 @@ module.exports = function(grunt) {
         app: 'src',
         dist: 'dist',
         name: yarn.name,
-        version: yarn.version,
-        description: '',
+        version: yarn.version
     };
 
     grunt.initConfig({
@@ -28,7 +27,7 @@ module.exports = function(grunt) {
         pkg: yarn,
         concat: {
             options: {
-                separator: ';'
+                separator: ';\n'
             },
             dist: {
                 src: ['src/**/*.js'],
@@ -45,6 +44,17 @@ module.exports = function(grunt) {
                 }
             }
         },
+        /* GRUNT HAS NO SUPPORT FOR YARN AS OF 8/11/2017 */
+/*        yarn: {
+            install: {
+                options: {
+                    install: true,
+                    copy: false,
+                    targetDir: '<%= gruntConfig.app%>/components'
+                }
+            }
+
+        },*/               
         connect: {
             client: {
                 options: {
@@ -62,20 +72,40 @@ module.exports = function(grunt) {
                     livereload: LIVERELOAD_PORT
                 }
             }
-        }
+        },
+        requirejs: {
+            options: {
+                baseUrl: 'src/js',
+                config: 'require-config.js',
+                require: '../../components/requirejs/require',
+                almond: '../../components/almond/almond'
+            },
+            dev: {
+                options: {
+                    build: false
+                }
+            }/*,
+            prod: {
+                options: {
+                    build: true
+                }
+            }*/
+        },
     });
 
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-require');
 
     // Default task(s).
     grunt.registerTask('default', ['uglify']);
 
-    grunt.registerTask('preview', ['connect:client', 'watch:client']);
+    //grunt.registerTask('preview', ['connect:client', 'watch:client']);
 
     grunt.registerTask('build', [
         'concat',
-        'uglify'
+        'uglify',
+        'requirejs'
         //'preview'   /*lets not run livereload for now*/
     ]);
 };

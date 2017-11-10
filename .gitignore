@@ -1,3 +1,5 @@
 yarn.lock
 dist
 node_modules
+components
+yarn-error.log
