@@ -25,6 +25,24 @@ module.exports = function(grunt) {
     grunt.initConfig({
         gruntConfig: gruntConfig,
         pkg: yarn,
+        htmlmin: {
+            build: {
+                options: {
+                    removeComments: false,
+                    collapseWhitespace: true
+                },
+                files: [{
+                        expand: true,
+                        cwd: '<%= gruntConfig.app%>/templates/',
+                        src: '**/*.html',
+                        dest: '<%= gruntConfig.dist %>/templates'
+                    },
+                    {
+                        '<%= gruntConfig.dist %>/index.html': '<%= gruntConfig.app%>/index.html'
+                    }
+                ]
+            }
+        },
         concat: {
             options: {
                 separator: ';\n'
@@ -45,16 +63,16 @@ module.exports = function(grunt) {
             }
         },
         /* GRUNT HAS NO SUPPORT FOR YARN AS OF 8/11/2017 */
-/*        yarn: {
-            install: {
-                options: {
-                    install: true,
-                    copy: false,
-                    targetDir: '<%= gruntConfig.app%>/components'
-                }
-            }
+        /*        yarn: {
+                    install: {
+                        options: {
+                            install: true,
+                            copy: false,
+                            targetDir: '<%= gruntConfig.app%>/components'
+                        }
+                    }
 
-        },*/               
+                },*/
         connect: {
             client: {
                 options: {
@@ -74,28 +92,36 @@ module.exports = function(grunt) {
             }
         },
         requirejs: {
-            options: {
-                baseUrl: 'src/js',
-                config: 'require-config.js',
-                require: '../../components/requirejs/require',
-                almond: '../../components/almond/almond'
-            },
-            dev: {
+            compile: {
                 options: {
-                    build: false
+                    baseUrl: 'src/js',
+                    mainConfigFile: 'src/js/require-config.js',
+                    appDir: '<%= gruntConfig.app %>',
+                    dir: '<%= gruntConfig.dist %>',
+                    require: '../../components/requirejs/require',
+                    almond: '../../components/almond/almond'/*,
+                    modules: [{
+                        name: 'require-config'
+                    }],*/
+                },
+                dev: {
+                    options: {
+                        build: false
+                    }
+                },
+                prod: {
+                    options: {
+                        build: true
+                    }
                 }
-            }/*,
-            prod: {
-                options: {
-                    build: true
-                }
-            }*/
+            }
         },
     });
 
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-require');
+    grunt.loadNpmTasks('grunt-contrib-requirejs');
+    grunt.loadNpmTasks('grunt-contrib-htmlmin');
 
     // Default task(s).
     grunt.registerTask('default', ['uglify']);
@@ -105,7 +131,8 @@ module.exports = function(grunt) {
     grunt.registerTask('build', [
         'concat',
         'uglify',
-        'requirejs'
+        'requirejs',
+        'htmlmin'
         //'preview'   /*lets not run livereload for now*/
     ]);
 };

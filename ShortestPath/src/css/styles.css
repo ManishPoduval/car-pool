@@ -169,6 +169,7 @@ body {
     float: left;
     font-family: monospace;
     color: #b7b7b7;
+    top: -21px;
 }
 
 #searchInput { 

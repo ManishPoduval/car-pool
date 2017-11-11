@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <script data-main="js/require-config.js" src="../components/requirejs/require.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a data-bind="click: showAllLocations">Car Pool</a>
+                </li>
+                <br>
+                <li>
+                    <input id="searchInput" type="text" data-bind="value: searchQuery" class="form-control" placeholder="Search">
+                    <button id="filterButton" type="submit" class="btn btn-default" data-bind="click: filterLocations"><i class="fa fa-filter" aria-hidden="true"></i></button>
+                </li>
+                <br><br>
+                <!--ko foreach: listOfPlaces -->
+                <li class="list_places">
+                    <a data-bind="text: title, click: $root.showInfo.bind($data, $data)"></a>
+                </li>
+                <!--/ko-->
+            </ul>
+        </div>
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="navbar-header">
+                            <button id="#toggleMenuBtn" data-bind="click: toggleMenu" type="button" class="navbar-toggle-btn" data-toggle="collapse" data-target="#myNavbar">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>                        
+                            </button>
+                        </div>
+                    </div>
+                </div>a
+
+            </div>
+        </div>
+        <div id="projectHeader"><span class="projectTitle" data-bind="text: projectTitle"></span></div>
+        <div id="map"></div>
+        <script>
+            require.config({
+                baseUrl: 'js'
+            });
+            require(['require-config'], function() {
+                require(['script']);
+            });
+        </script>
+        <script id="mapsAPI" async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyDb8WsHbwDv-oX5cQ3MpTBVJtTP8-V6EHA&v=3" onerror="googleErrorHandler()">
+        </script>
+        <!-- /#page-content-wrapper -->
+    </div>
+</body>
+
+</html>
