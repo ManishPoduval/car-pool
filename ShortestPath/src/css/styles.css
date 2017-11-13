@@ -11,12 +11,13 @@
 #projectHeader {
 	top: 0px;
 	height: 50px;
-	background-color: #1a1a1a;
+	background-color: #292828;
 }
 
 body {
   overflow-x: hidden;
-  background-color: #1a1a1a;
+  background-color: #292828;
+  font-family: monospace;
 }
 
 #wrapper {
@@ -39,7 +40,7 @@ body {
   height: 100%;
   margin-left: -250px;
   overflow-y: auto;
-  background: #1a1a1a;
+  background: #292828;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -54,7 +55,7 @@ body {
   width: 100%;
   position: absolute;
   padding: 15px;
-  background-color: #1a1a1a;
+  background-color: #292828;
 }
 
 #wrapper.toggled #page-content-wrapper {
@@ -99,6 +100,7 @@ body {
   height: 65px;
   font-size: 18px;
   line-height: 60px;
+  text-align: center;
 }
 
 .sidebar-nav>.sidebar-brand a {
@@ -169,20 +171,18 @@ body {
     float: left;
     font-family: monospace;
     color: #b7b7b7;
-    top: -21px;
+    top: -5px;
 }
 
-#searchInput { 
-	position: relative ; 
-    float: left;
-    width: 75% ;
-    left: 10px;
+#destination { 
+position: relative;
+  text-align: center;
+  width: 70%;
 }
 
-#filterButton {
+#calculateButton {
 	position: relative;
-    float: right;
-    right: 9px;
+  text-align: center;
 }
 
 .list_places {

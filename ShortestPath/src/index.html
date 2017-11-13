@@ -13,14 +13,19 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
-                    <a>Car Pool</a>
+                    <a data-bind="text: projectTitle, attr: {href: gitRepo}" target="_blank">Car Pool</a>
                 </li>
                 <br>
                 <li>
-                    <input id="searchInput" type="text" class="form-control" placeholder="Search">
-                    <button id="filterButton" type="submit" class="btn btn-default">Submit</button>
+                    <input id="destination" type="text" class="form-control" placeholder="Search">
                 </li>
+                <!--ko foreach: nodes -->
+                <li >
+                    <input type="text" class="form-control" placeholder="Enter location">
+                </li>   
+                <!--/ko--> 
                 <br><br>
+                <li><button id="calculateButton" type="submit" class="btn btn-default" data-bind="text: calBtnText, enable: enableCalBtn"></button></li>
             </ul>
         </div>
         <!-- Page Content -->

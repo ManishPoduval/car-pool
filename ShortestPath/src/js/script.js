@@ -28,13 +28,20 @@ define([
         };
 
         $(document).ready(function() {
-            /*apply bindings when the page is ready*/
             var $mapsAPI = document.getElementById('mapsAPI');
             $mapsAPI.onload = initMap;
             $mapsAPI.onerror = googleErrorHandler;
         });
 
-        $.when(googleMapAPIDeferred).done(function(){
+        /*worse case scenario failure handler*/
+        setTimeout(function() {
+            if (googleMapAPIDeferred.state() === 'pending' && !$('#map').get(0).childNodes.length) {
+                alert('Ooops, Google API crashed. Please reload the page!');
+            }
+        }, 2000);
+
+        $.when(googleMapAPIDeferred).done(function() {
+            /*Call and create the view model*/
             mapViewModel.create(google);
         });
 
