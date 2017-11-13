@@ -13,22 +13,16 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
-                    <a data-bind="click: showAllLocations">Car Pool</a>
+                    <a>Car Pool</a>
                 </li>
                 <br>
                 <li>
-                    <input id="searchInput" type="text" data-bind="value: searchQuery" class="form-control" placeholder="Search">
-                    <button id="filterButton" type="submit" class="btn btn-default" data-bind="click: filterLocations"><i class="fa fa-filter" aria-hidden="true"></i></button>
+                    <input id="searchInput" type="text" class="form-control" placeholder="Search">
+                    <button id="filterButton" type="submit" class="btn btn-default">Submit</button>
                 </li>
                 <br><br>
-                <!--ko foreach: listOfPlaces -->
-                <li class="list_places">
-                    <a data-bind="text: title, click: $root.showInfo.bind($data, $data)"></a>
-                </li>
-                <!--/ko-->
             </ul>
         </div>
-
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
@@ -42,8 +36,7 @@
                             </button>
                         </div>
                     </div>
-                </div>a
-
+                </div>
             </div>
         </div>
         <div id="projectHeader"><span class="projectTitle" data-bind="text: projectTitle"></span></div>
@@ -56,7 +49,7 @@
                 require(['script']);
             });
         </script>
-        <script id="mapsAPI" async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyDb8WsHbwDv-oX5cQ3MpTBVJtTP8-V6EHA&v=3" onerror="googleErrorHandler()">
+        <script id="mapsAPI" async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyDb8WsHbwDv-oX5cQ3MpTBVJtTP8-V6EHA&v=3">
         </script>
         <!-- /#page-content-wrapper -->
     </div>
