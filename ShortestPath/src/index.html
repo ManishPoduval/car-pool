@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <script data-main="js/require-config.js" src="../components/requirejs/require.js"></script>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 </head>
 
 <body>
@@ -21,8 +22,16 @@
                 </li>
                 <!--ko foreach: nodes -->
                 <li >
-                    <input type="text" class="form-control" placeholder="Enter location">
-                </li>   
+                    <input type="text" class="form-control" placeholder="Enter location" data-bind="attr: {id: $parent.locationIdPrefix + $index()}" >
+                    <button type="submit" class="btn btn-default" data-bind="click: $parent.addNode.bind($data, $index() + 1)">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                    <!-- ko if: $parent.nodes().length > 1 -->
+                    <button type="submit" class="btn btn-default" data-bind="click: $parent.deleteNode">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    </button>
+                    <!-- /ko -->
+                </li>
                 <!--/ko--> 
                 <br><br>
                 <li><button id="calculateButton" type="submit" class="btn btn-default" data-bind="text: calBtnText, enable: enableCalBtn"></button></li>
@@ -54,7 +63,7 @@
                 require(['script']);
             });
         </script>
-        <script id="mapsAPI" async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyDb8WsHbwDv-oX5cQ3MpTBVJtTP8-V6EHA&v=3">
+        <script id="mapsAPI" async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCcZodlSI2ufabIeHHFz2Bi75bl4r-5zng&v=3">
         </script>
         <!-- /#page-content-wrapper -->
     </div>

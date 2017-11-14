@@ -1,12 +1,12 @@
 /*This file will contain all the contants,
-* styles, property values related to the map
-*/
+ * styles, property values related to the map
+ */
 
 define([
         'jquery',
         'knockout'
     ],
-    function($, ko) {
+    function ($, ko) {
 
         var mapProp = {};
 
@@ -14,7 +14,7 @@ define([
 
         /*the array of custom styles*/
         mapProp.style = [
-        	{
+            {
                 "elementType": "geometry",
                 "stylers": [{
                     "color": "#f5f5f5"
@@ -146,9 +146,9 @@ define([
 
         /*map onLoad default values here*/
         mapProp.center = {
-        	lat: 18.569212,
-        	lng: 73.773665,
-        	zoom: 15
+            lat: 18.569212,
+            lng: 73.773665,
+            zoom: 15
         };
 
         return mapProp;
