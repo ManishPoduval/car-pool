@@ -6,67 +6,75 @@
     <meta charset="utf-8">
     <script data-main="js/require-config.js" src="../components/requirejs/require.js"></script>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 </head>
 
 <body>
-    <div id="wrapper">
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <a data-bind="text: projectTitle, attr: {href: gitRepo}" target="_blank">Car Pool</a>
-                </li>
-                <br>
-                <li>
-                    <input id="destination" type="text" class="form-control" placeholder="Search">
-                </li>
-                <!--ko foreach: nodes -->
-                <li >
-                    <input type="text" class="form-control" placeholder="Enter location" data-bind="attr: {id: $parent.locationIdPrefix + $index()}" >
-                    <button type="submit" class="btn btn-default" data-bind="click: $parent.addNode.bind($data, $index() + 1)">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                    </button>
-                    <!-- ko if: $parent.nodes().length > 1 -->
-                    <button type="submit" class="btn btn-default" data-bind="click: $parent.deleteNode">
-                        <i class="fa fa-trash-o" aria-hidden="true"></i>
-                    </button>
-                    <!-- /ko -->
-                </li>
-                <!--/ko--> 
-                <br><br>
-                <li><button id="calculateButton" type="submit" class="btn btn-default" data-bind="text: calBtnText, enable: enableCalBtn"></button></li>
-            </ul>
-        </div>
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="navbar-header">
-                            <button id="#toggleMenuBtn" data-bind="click: toggleMenu" type="button" class="navbar-toggle-btn" data-toggle="collapse" data-target="#myNavbar">
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>                        
-                            </button>
-                        </div>
+<div id="wrapper">
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+                <a data-bind="text: projectTitle, attr: {href: gitRepo}" target="_blank">Car Pool</a>
+            </li>
+            <br>
+            <li>
+                <input id="destination" type="text" class="form-control" placeholder="Destination" data-bind="event: { keyup: setCurrentField}">
+            </li>
+            <!--ko foreach: nodes -->
+            <li>
+                <input type="text" class="form-control" placeholder="Enter pick up/drop location" data-bind="attr: {id: $parent.locationIdPrefix + $index()},
+                        event: { keyup: $parent.setCurrentField }">
+                <button type="submit" class="btn btn-default"
+                        data-bind="click: $parent.addNode.bind($data, $index() + 1)">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+                <!-- ko if: $parent.nodes().length > 1 -->
+                <button type="submit" class="btn btn-default" data-bind="click: $parent.deleteNode">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                </button>
+                <!-- /ko -->
+            </li>
+            <!--/ko-->
+            <br><br>
+            <li>
+                <button id="calculateButton" type="submit" class="btn btn-default"
+                        data-bind="text: calBtnText, enable: enableCalBtn"></button>
+            </li>
+        </ul>
+    </div>
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="navbar-header">
+                        <button id="#toggleMenuBtn" data-bind="click: toggleMenu" type="button"
+                                class="navbar-toggle-btn" data-toggle="collapse" data-target="#myNavbar">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="projectHeader"><span class="projectTitle" data-bind="text: projectTitle"></span></div>
-        <div id="map"></div>
-        <script>
-            require.config({
-                baseUrl: 'js'
-            });
-            require(['require-config'], function() {
-                require(['script']);
-            });
-        </script>
-        <script id="mapsAPI" async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCcZodlSI2ufabIeHHFz2Bi75bl4r-5zng&v=3">
-        </script>
-        <!-- /#page-content-wrapper -->
     </div>
+    <div id="projectHeader"><span class="projectTitle" data-bind="text: projectTitle"></span></div>
+    <div id="map"></div>
+    <script>
+        require.config({
+            baseUrl: 'js'
+        });
+        require(['require-config'], function () {
+            require(['script']);
+        });
+    </script>
+    <script id="mapsAPI" async defer
+            src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCcZodlSI2ufabIeHHFz2Bi75bl4r-5zng&v=3">
+    </script>
+    <!-- /#page-content-wrapper -->
+</div>
 </body>
 
 </html>
