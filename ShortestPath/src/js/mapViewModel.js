@@ -11,6 +11,8 @@ define([
         var desLocation = {}; //store destination properties here
         var constDestination = 'destination'; //id of destination search input field
         var timer = 15000;
+        var origins, destination = [];
+        var distanceMatrixObj = {};
 
         /*restrictng the autocomplete to only india for now*/
         var options = {
@@ -105,6 +107,37 @@ define([
             });
         };
 
+        /*computes the distance matrix response */
+        /*creates a weighted graph from each origin to each destination*/
+        var distanceMatrixCallback = function (response, status) {
+            if (status === 'OK') {
+                distanceMatrixObj = {};
+                response.rows.forEach(function (row, o) {
+                    if (row.elements.length) {
+                        row.elements.forEach(function (obj, d) {
+                            distanceMatrixObj[(o * response.rows.length) + d] = {
+                                from: viewModel.nodes()[o].id,
+                                to: d === 0 ? desLocation.id : viewModel.nodes()[d - 1].id,
+                                dest: obj.distance.value, //in meters (Metric)
+                                time: obj.duration.value //in seconds
+                            }
+                        });
+                    }
+                });
+            }
+        };
+
+        /*This function calculates the distance between a destination and one or more nodes*/
+        var googleDistanceMatrix = function (destinationObj, originsArr) {
+            var service = new google.maps.DistanceMatrixService();
+            service.getDistanceMatrix(
+                {
+                    origins: originsArr,
+                    destinations: destinationObj,
+                    travelMode: 'DRIVING'
+                }, distanceMatrixCallback);
+        };
+
         function MapViewModel() {
             var self = this;
 
@@ -120,7 +153,7 @@ define([
             self.locationIdPrefix = 'location_';
             self.projectTitle = 'Car Pool'; //no need to make this an observable
             self.calBtnText = 'Calculate';
-            self.enableCalBtn = ko.observable(false);
+            self.enableCalBtn = ko.observable(true);
             self.gitRepo = 'https://github.com/ManishPoduval/dijkstra-car-pool';
 
             /**
@@ -137,15 +170,15 @@ define([
             }]);
 
             /*add a node to left nav*/
-            self.addNode = function (index) {
+            self.addNode = function () {
                 self.nodes.push({
-                    id: self.locationIdPrefix + index,
+                    id: self.locationIdPrefix + self.nodes().length,
                     location: {
                         lat: null,
                         lng: null
                     }
                 });
-                setUpAutocomplete(self.locationIdPrefix + index);
+                setUpAutocomplete(self.locationIdPrefix + (self.nodes().length - 1));
             };
 
             /*delete a node from left nav*/
@@ -158,7 +191,25 @@ define([
             /*sets the current field id to map with the location being selected*/
             self.setCurrentField = function (data, event) {
                 currentField = event.target.id;
-            }
+            };
+
+            /*calculates the shortest path between the nodes and the destination*/
+            self.calculateShortestPath = function () {
+                destination = [];
+                //ensure that the destination is always first
+                destination.push(desLocation.location);
+                origins = [];
+                if (destination) {
+                    self.nodes().forEach(function (obj) {
+                        origins.push(obj.location);
+                        destination.push(obj.location);
+                    });
+                    googleDistanceMatrix(destination, origins);
+                }
+                else {
+                    console.warn('You\'ve missed entering location somewhere');
+                }
+            };
         }
 
         mvm = {
