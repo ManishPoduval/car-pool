@@ -1,18 +1,17 @@
 define([
         'jquery',
         'knockout',
-        'mapUtils'
+        'mapUtils',
+        'mapHelper'
     ],
-    function ($, ko, mapUtils) {
+    function ($, ko, mapUtils, mapHelper) {
         var mvm, viewModel, map, currentField;
         var first = false;
         var $wrapper = $('#wrapper');
         var markers = [];
         var desLocation = {}; //store destination properties here
         var constDestination = 'destination'; //id of destination search input field
-        var timer = 15000;
         var origins, destination = [];
-        var distanceMatrixObj = {};
 
         /*restrictng the autocomplete to only india for now*/
         var options = {
@@ -107,26 +106,6 @@ define([
             });
         };
 
-        /*computes the distance matrix response */
-        /*creates a weighted graph from each origin to each destination*/
-        var distanceMatrixCallback = function (response, status) {
-            if (status === 'OK') {
-                distanceMatrixObj = {};
-                response.rows.forEach(function (row, o) {
-                    if (row.elements.length) {
-                        row.elements.forEach(function (obj, d) {
-                            distanceMatrixObj[(o * response.rows.length) + d] = {
-                                from: viewModel.nodes()[o].id,
-                                to: d === 0 ? desLocation.id : viewModel.nodes()[d - 1].id,
-                                dest: obj.distance.value, //in meters (Metric)
-                                time: obj.duration.value //in seconds
-                            }
-                        });
-                    }
-                });
-            }
-        };
-
         /*This function calculates the distance between a destination and one or more nodes*/
         var googleDistanceMatrix = function (destinationObj, originsArr) {
             var service = new google.maps.DistanceMatrixService();
@@ -135,7 +114,9 @@ define([
                     origins: originsArr,
                     destinations: destinationObj,
                     travelMode: 'DRIVING'
-                }, distanceMatrixCallback);
+                }, function (response, status) {
+                    mapHelper.distanceMatrixCallback.call(viewModel, response, status);
+                });
         };
 
         function MapViewModel() {
@@ -155,6 +136,7 @@ define([
             self.calBtnText = 'Calculate';
             self.enableCalBtn = ko.observable(true);
             self.gitRepo = 'https://github.com/ManishPoduval/dijkstra-car-pool';
+            self.cabCount = ko.observable();
 
             /**
              * view them as your pick and drop locations
