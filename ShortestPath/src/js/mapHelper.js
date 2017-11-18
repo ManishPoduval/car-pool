@@ -23,7 +23,7 @@ define([
                     var localArr = [];
                     if (o.length) {
                         o.forEach(function (d, dIndex) {
-                            if (d < distanceToDest[oIndex] && distanceToDest[dIndex] > d && dIndex !== oIndex) {
+                            if (d < distanceToDest[oIndex] && distanceToDest[dIndex] < distanceToDest[oIndex] && dIndex !== oIndex) {
                                 localArr.push(dIndex);
                             }
                         });
