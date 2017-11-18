@@ -20,6 +20,11 @@ define([
             }
         };
 
+        /**
+         *
+         * @param {id} The id of location to update
+         * @param {location} Object containing lat and lng values
+         */
         var updateNodeLatLng = function (id, location) {
             if (id !== constDestination) {
                 viewModel.nodes().forEach(function (obj) {
@@ -48,7 +53,10 @@ define([
             map.fitBounds(bounds);
         };
 
-        /*creates a marker that appears on the map*/
+        /**
+         *
+         * @param {currentId} The id for which we create a marker
+         */
         var createMarker = function (currentId) {
             var nodeLocation = currentId === constDestination ? desLocation
                 : viewModel.nodes().filter(function (node) {
@@ -73,7 +81,10 @@ define([
             });
         };
 
-        /*deletes a marker once you delete the input field*/
+        /**
+         *
+         * @param {id} The id for which we delete the marker
+         */
         var deleteMarker = function (id) {
             var markerIndex;
             markers.some(function (obj, index) {
@@ -89,6 +100,11 @@ define([
             }
         };
 
+        /**
+         *
+         * @param {element} The id of the DOM element (input tag)
+         * Sets up the google autocomplete for the DOM element
+         */
         var setUpAutocomplete = function (element) {
             var autocomplete = new google.maps.places.Autocomplete(document.getElementById(element), options);
             autocomplete.bindTo('bounds', map);
@@ -106,7 +122,13 @@ define([
             });
         };
 
-        /*This function calculates the distance between a destination and one or more nodes*/
+        /**
+         *
+         * @param {destinationObj} array of objects of destinations.
+         *        the object contains lat and lng values
+         * @param {originsArr} array of objects containing origins.
+         *        the object contains lat lng values
+         */
         var googleDistanceMatrix = function (destinationObj, originsArr) {
             var service = new google.maps.DistanceMatrixService();
             service.getDistanceMatrix(

@@ -5,9 +5,8 @@ define([
         'mapViewModel'
     ],
     function ($, ko, mapUtils, mapViewModel) {
-        var map, viewModel;
+        var map;
         var googleMapAPIDeferred = $.Deferred();
-        var details;
 
         var googleErrorHandler = function () {
             alert(mapUtils.apiError);
