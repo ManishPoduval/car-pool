@@ -137,7 +137,7 @@ define([
                     destinations: destinationObj,
                     travelMode: 'DRIVING'
                 }, function (response, status) {
-                    mapHelper.distanceMatrixCallback.call(viewModel, response, status);
+                    mapHelper.distanceMatrixCallback.call(viewModel, response, status, desLocation);
                 });
         };
 
