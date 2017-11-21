@@ -14,9 +14,6 @@ define([
         var cl = [];
         var visited = [];
         var nodes = [];
-        var cabSize = 4; //assuming cab size is 4
-        var clusters = {};
-        var endNodes = [];
         var routes = {};
         var mapViewModel, destination;
 
@@ -26,7 +23,7 @@ define([
                 mapViewModel.nodes().forEach(function (obj) {
                     if (routes[r].length) {
                         routes[r].forEach(function (routeNode) {
-                            if (obj.id.split('_')[1] === routes[r]) {
+                            if (Number(obj.id.split('_')[1]) === routeNode) {
                                 wayPoints.push({
                                     location: obj.location,
                                     stopover: true
@@ -54,16 +51,27 @@ define([
             }
         };
 
+        /**
+         * finds the farthest node from the input origins
+         */
         mapHelper.findfarthest = function () {
             if (cl.length) {
                 var maxIndex;
                 var maxLength = 0;
                 cl.forEach(function (arr, index) {
-                    if (arr && arr.length > maxLength /*&& !visited.includes(index)*/) {
+                    if (arr && arr.length > maxLength) {
                         maxIndex = index;
                         maxLength = arr.length;
                     }
                 });
+                if (!maxIndex && maxIndex !== 0) {
+                    maxIndex = [];
+                    cl.forEach(function (arr, index) {
+                        if (arr && arr.length === 0) {
+                            maxIndex.push(index);
+                        }
+                    });
+                }
                 return maxIndex;
             }
         };
@@ -74,53 +82,99 @@ define([
          */
         mapHelper.clusterLocations = function () {
             var cabs = Number(mapViewModel.cabCount());
+            var lonelyChild = []; //the nodes that come in common
             routes = {};
             while (cabs) {
+                var localArr = [];
                 /*cabs is manipulated directly hence you want to avoid using it here*/
                 var memberInACab = Math.round(cl.length / Number(mapViewModel.cabCount()));
                 var i = mapHelper.findfarthest();
-                if (cl[i].length) {
-                    routes[i] = [];
-                    var distances = distanceMatrixArr[i];
-                    var localArr = [];
-                    visited.push(i);
-                    memberInACab -= 1;
+                /*check if it's not an array of endPoints*/
+                if (!i.length && cl[i].length) {
+                    localArr = [];
                     cl[i].forEach(function (d) {
-                        localArr.push(distanceMatrixArr[i][d]);
+                        if (!visited.includes(d)) {
+                            localArr.push(distanceMatrixArr[i][d]);
+                        }
                     });
-                    cl[i] = null;
-                    localArr.sort(function(a, b) {
+                    if (localArr.length) {
+                        routes[i] = [];
+                        visited.push(i);
+                        memberInACab -= 1;
+                        cl[i] = null;
+                        localArr.sort(function (a, b) {
+                            return a - b;
+                        });
+                        localArr.forEach(function (val) {
+                            if (memberInACab !== 0 && !visited.includes(distanceMatrixArr[i].indexOf(val))) {
+                                visited.push(distanceMatrixArr[i].indexOf(val));
+                                routes[i].push(distanceMatrixArr[i].indexOf(val));
+                                cl[distanceMatrixArr[i].indexOf(val)] = null;
+                                memberInACab -= 1;
+                            }
+                        });
+                        cabs -= 1;
+                    }
+                    else {
+                        lonelyChild.push(i);
+                        cl[i] = null;
+                    }
+                }
+                else if (i.length) {
+                    localArr = [];
+                    i.forEach(function (val) {
+                        localArr.push(distanceToDest[val]);
+                    });
+                    localArr.sort(function (a, b) {
                         return a - b;
                     });
+                    var lastIndex = distanceToDest.indexOf(localArr[localArr.length-1]);
+                    routes[lastIndex] = [];
+                    cl[lastIndex] = null;
+                    localArr.splice(localArr.length-1, 1);
                     localArr.forEach(function (val) {
-                       if (memberInACab !== 0 && !visited.includes(distanceMatrixArr[i].indexOf(val))) {
-                           visited.push(distanceMatrixArr[i].indexOf(val));
-                           routes[i].push(distanceMatrixArr[i].indexOf(val));
-                           cl[distanceMatrixArr[i].indexOf(val)] = null;
-                           memberInACab -= 1;
-                       }
+                        if (memberInACab !== 0 && !visited.includes(distanceToDest.indexOf(val))) {
+                            routes[lastIndex].push(distanceToDest.indexOf(val));
+                            visited.push(distanceToDest.indexOf(val));
+                            cl[distanceToDest.indexOf(val)] = null;
+                            memberInACab -= 1;
+                        }
                     });
                     cabs -= 1;
                 }
             }
+            if (lonelyChild.length) {
+                /*lets push these people in one of the cabs*/
+                lonelyChild.forEach(function (lc) {
+                    var lcDistMax = Math.max.apply(null, distanceMatrixArr[lc]);
+                    var closestStart;
+                    for (var k in routes) {
+                        if (routes.hasOwnProperty(k)) {
+                            if (distanceMatrixArr[lc][k] < lcDistMax) {
+                                closestStart = k;
+                            }
+                        }
+                    }
+                    routes[closestStart].push(lc);
+                });
+            }
+            mapHelper.getDirections();
         };
 
-        //TODO: need to refactor 
+
         /**
          *  finds clostest locations/areas based on proximity relative to the destination
-         *  and decides the n end nodes for n cabs
          */
         mapHelper.closestLocations = function (cabs) {
             cl.length = 0;
             visited.length = 0;
-            endNodes.length = 0;
             if (distanceMatrixArr.length && distanceToDest.length) {
                 distanceMatrixArr.forEach(function (o, oIndex) {
                     var localArr = [];
                     if (o.length) {
                         o.forEach(function (d, dIndex) {
                             if (d < distanceToDest[oIndex] && distanceToDest[dIndex] < distanceToDest[oIndex] &&
-                                dIndex !== oIndex && localArr.length < cabSize) {
+                                dIndex !== oIndex) {
                                 localArr.push(dIndex);
                             }
                         });
@@ -128,7 +182,6 @@ define([
                     }
                 });
                 mapHelper.clusterLocations();
-
             }
         };
 
@@ -142,8 +195,11 @@ define([
             if (status === 'OK') {
                 distanceMatrixArr.length = 0;
                 distanceToDest.length = 0;
-                clusters = {};
                 nodes.length = 0;
+                /**
+                 * loops through the response to create a 2D array
+                 *  the array stores the distance from each origin to each destination
+                 */
                 response.rows.forEach(function (row, o) {
                     nodes.push(o);
                     var localArr = [];
@@ -151,6 +207,10 @@ define([
                         row.elements.forEach(function (obj, d) {
                             var to = d === 0 ? destinationId : mapViewModel.nodes()[d - 1].id;
                             if (d === 0) {
+                                /**
+                                 * Also seperately stores the distance from each
+                                 * origin to main destination in a separate array
+                                 */
                                 distanceToDest.push(obj.distance.value);
                             }
                             else {
