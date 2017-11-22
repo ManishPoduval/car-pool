@@ -15,9 +15,13 @@ define([
         var visited = [];
         var nodes = [];
         var routes = {};
-        var mapViewModel, destination;
+        var mapViewModel, destination, map, markers;
+        var colorsArray = ['#3ac37a', '#F1B016', '#E4DB2F'];
 
         mapHelper.getDirections = function () {
+            markers.forEach(function (obj, index) {
+                markers[index].setMap(null);
+            });
             for (var r in routes) {
                 var wayPoints = [];
                 mapViewModel.nodes().forEach(function (obj) {
@@ -32,22 +36,39 @@ define([
                         });
                     }
                 });
-                var directionsService = new google.maps.DirectionsService;
-                var directionsDisplay = new google.maps.DirectionsRenderer;
-                var origin = mapViewModel.nodes()[r].location;
-                var dest = destination.location;
-                directionsService.route({
-                    origin: origin,
-                    destination: dest,
-                    waypoints: wayPoints,
-                    travelMode: 'DRIVING'
-                }, function (response, status) {
-                    if (status === 'OK') {
-                        directionsDisplay.setDirections(response);
-                    } else {
-                        window.alert('Directions request failed due to ' + status);
-                    }
-                });
+                (function () {
+                    var directionsService = new google.maps.DirectionsService;
+                    var directionsDisplay = new google.maps.DirectionsRenderer;
+                    directionsDisplay.setMap(map);
+                    var origin = mapViewModel.nodes()[r].location;
+                    var dest = destination.location;
+                    var randomNumber = Math.round(Math.random()*r*100);
+                    (function () {
+                        directionsService.route({
+                            origin: origin,
+                            destination: dest,
+                            waypoints: wayPoints,
+                            travelMode: 'DRIVING'
+                        }, function (response, status) {
+                            if (status === 'OK') {
+                                directionsDisplay.setOptions({
+                                    polylineOptions: {
+                                        strokeColor: colorsArray[randomNumber%3], //just a sample way
+                                        strokeWeight: 7
+                                    },
+                                    markerOptions: {
+                                        markerLabel: {
+                                            color: colorsArray[randomNumber%3]
+                                        }
+                                    }
+                                });
+                                directionsDisplay.setDirections(response);
+                            } else {
+                                window.alert('Directions request failed due to ' + status);
+                            }
+                        });
+                    })();
+                })();
             }
         };
 
@@ -90,7 +111,7 @@ define([
                 var memberInACab = Math.round(cl.length / Number(mapViewModel.cabCount()));
                 var i = mapHelper.findfarthest();
                 /*check if it's not an array of endPoints*/
-                if (!i.length && cl[i].length) {
+                if (!i.length && !Array.isArray(i) && cl[i].length) {
                     localArr = [];
                     cl[i].forEach(function (d) {
                         if (!visited.includes(d)) {
@@ -189,9 +210,11 @@ define([
          * computes the distance matrix response
          * creates a weighted graph obj from each origin to each destination
          */
-        mapHelper.distanceMatrixCallback = function (response, status, desLocation) {
+        mapHelper.distanceMatrixCallback = function (response, status, vmObj) {
+            map = vmObj.map;
             mapViewModel = this;
-            destination = desLocation;
+            destination = vmObj.desLocation;
+            markers = vmObj.markers;
             if (status === 'OK') {
                 distanceMatrixArr.length = 0;
                 distanceToDest.length = 0;

@@ -63,7 +63,6 @@ define([
                     return node.id === currentId;
                 });
             var marker = new google.maps.Marker({
-                map: map,
                 position: currentId === constDestination ? desLocation.location : nodeLocation[0].location,
                 animation: google.maps.Animation.DROP,
                 icon: currentId === constDestination ? mapUtils.makeMarkerIcon(mapUtils.destinationMarkerColor) : mapUtils.makeMarkerIcon(mapUtils.defaultMarkerColor),
@@ -95,6 +94,7 @@ define([
                 }
             });
             if (markerIndex >= 0) {
+                map: map,
                 markers[markerIndex].setMap(null);
                 markers.splice(markerIndex, 1);
             }
@@ -137,7 +137,11 @@ define([
                     destinations: destinationObj,
                     travelMode: 'DRIVING'
                 }, function (response, status) {
-                    mapHelper.distanceMatrixCallback.call(viewModel, response, status, desLocation);
+                    var vmObj = {};
+                    vmObj.markers = markers;
+                    vmObj.desLocation = desLocation;
+                    vmObj.map = map;
+                    mapHelper.distanceMatrixCallback.call(viewModel, response, status, vmObj);
                 });
         };
 
