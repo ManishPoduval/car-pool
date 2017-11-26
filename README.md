@@ -41,12 +41,12 @@ Click on the burger icon to the top left to expand the sidebar.
 ![](https://github.com/ManishPoduval/car-pool/blob/master/ShortestPath/src/images/Sidebar.png)
 
 Enter your destination, your pick up/drop locations, number of cabs available.
-You'll get the following image, with the markers populated accordingly. Your destination marker is in green adn the rest are in yellow
+You'll get the following image, with the markers populated accordingly. Your destination marker is in green and the rest are in yellow
 
 ![](https://github.com/ManishPoduval/car-pool/blob/master/ShortestPath/src/images/EnterLocations.png)
 
 Now to plot the routes on the map click on the Calculate button.
-You'll get the routes plotted on the map as well as the location marked with alphabets indicating the order of the pick up for each route.
+You'll get the routes plotted on the map as well as the locations marked with alphabets indicating the order of the pick up for each route.
 
 ![](https://github.com/ManishPoduval/car-pool/blob/master/ShortestPath/src/images/PopulatedRoutes.png)
 
