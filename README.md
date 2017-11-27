@@ -82,8 +82,7 @@ If you'd like to request a new function, feel free to do so by opening an issue 
 - [Bootstrap](http://getbootstrap.com/) - Extensive list of components and  Bundled Javascript plugins.
 - [KnockoutJs](http://knockoutjs.com/) - Knockout is a JavaScript MVVM (a modern variant of MVC) library that makes it easier to create rich, desktop-like user interfaces with JavaScript and HTML.
 - [GruntJs](https://gruntjs.com/) - GruntJS is a JavaScript based command line build tool that helps developers automate repetitive tasks.
-- [RequireJs](http://requirejs.org/) - Image result for what is requirejsgithub.com
-                  RequireJS is a JavaScript file and module loader.
+- [RequireJs](http://requirejs.org/) - RequireJS is a JavaScript file and module loader.
 
 ## [License](https://github.com/ManishPoduval/car-pool/blob/master/LICENSE.md)
 
